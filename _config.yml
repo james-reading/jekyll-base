@@ -5,6 +5,9 @@ exclude:
   - assets/javascript
   - package.json
   - package-lock.json
+  - postcss.config.mjs
+  - Procfile
+  - tailwind.config.js
 keep_files:
   - assets/css
   - assets/javascript
