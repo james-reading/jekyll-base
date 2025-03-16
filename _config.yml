@@ -1,0 +1,10 @@
+title: Your awesome title
+
+exclude:
+  - assets/css
+  - assets/javascript
+  - package.json
+  - package-lock.json
+keep_files:
+  - assets/css
+  - assets/javascript
