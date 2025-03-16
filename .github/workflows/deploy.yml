@@ -13,6 +13,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.4"
+          bundler-cache: true
+
+      - name: Install Jekyll and Dependencies
+        run: bundle install
+
+      - name: Build Jekyll Site
+        run: bundle exec jekyll build
+
       - name: Set Up Node.js
         uses: actions/setup-node@v4
         with:
@@ -24,16 +36,12 @@ jobs:
       - name: Build Project
         run: npm run build
 
-      - name: Install AWS CLI
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y awscli
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
 
       - name: Deploy to S3
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: eu-west-2
-          S3_BUCKET_NAME: jekyll.tastybook.co.uk
-        run: |
-          aws s3 sync _site/ s3://$S3_BUCKET_NAME --delete
+        run: aws s3 sync _site/ s3://jekyll.tastybook.co.uk --delete
